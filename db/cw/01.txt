@@ -1,0 +1,51 @@
+1. 
+SELECT Nazwisko_prezesa from Firma;
+SELECT DISTINCT  Nazwisko_prezesa from Firma;
+
+2.SELECT Nazwa FROM Firma WHERE
+	Data_zalozenia < TO_DATE('2000_01_01', 'YYYY-MM-DD');
+
+3. SELECT * FROM Firma f WHERE 
+	(SELECT count(*) FROM Zatrudnienie WHERE Nazwa_firmy = f.Nazwa) >= 10;
+
+4. SELECT Nazwisko_prezesa FROM Firma f WHERE
+
+	(SELECT count(*) FROM Pracownicy p WHERE p.Pesel = f.Pesel_prezesa) > 0; 
+
+5. Select Nazwa, Imie_prezesa, Nazwisko_prezesa, miesiac, rok 
+	FROM Firma f JOIN Obroty o ON (f.Nazwa = o.Nazwa_firmy)
+	WHERE o.przychod  < o.wydatki;
+
+6.  SELECT f.Nazwa, o.Rok, SUM(o.pryzchod) - SUM(O.dochod) 
+	FROM Firma f JOIN Obroty o ON (f.Nazwa = o.Nazwa_firmy)
+	WHERE f.Nazwisko_prezesa = 'Kowalski'
+	GROUP BY f.Nazwa, o.Rok;
+
+7. SELECT f.Imie_prezesa, f.Nazwisko_prezesa, f.Nazwa FORM Firma f
+	WHERE 'Fikcyjny' NOT IN 
+	(SELECT p.Nazwisko FROM Pracownicy p WHERE p.Id IN
+		(SELECT Id_pracownika FROM Zatrudnienie z WHERE
+			z.Nazwa_firmy = f.Nazwa));
+
+8. SELECT * FROM Firma WHERE
+	Nazwa LIKE '%z o.o..%';
+9. Select Nazwa, Datepart('year', MIN(Data_zalozenia)) FROM Firma; 
+
+10. SELECT * FROM Firma f WHERE
+	(SELECT count(*) FROM Zatrudninie z WHERE f.Nazwa = z.Nazwa_firmy) = 0;
+
+11. SELECT * FROM Firma f
+	WHERE f.Data_zalozenia < (SELECT Data_zalozenia FROM Firma f2 WHERE
+		f2.Nazwa = 'Korepetycje sp. z o.o.');
+
+12. SELECT DISTINCT Imie FROM Pracownicy WHERE
+	Nazwisko = 'Kowalski' OR Nazwisko = 'Nowak';
+
+13. SELECT * FROM Firma f WHERE 
+	(SELECT MAX(*) FROM (SELECT (SUM(prychody) - SUM(obroty)) FROM Obroty
+		WHERE Rok = Datepart('year', f.Data_zalozenia )
+		GROUP BY Nazwa_firmy, rok)) 
+	=
+	(SELECT SUM(przychody) - SUM(dochody) FROM Obroty 
+		WHERE Rok = Datepart('year', f.Data_zalozenia)
+			AND Nazwa_firmy = f.nazwa);

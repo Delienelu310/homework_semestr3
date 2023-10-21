@@ -14,3 +14,7 @@ export function second(x){
 export function third(x){
     return 4 * x * ( (1 - x)**3 );
 }
+
+export function piCalculation(x){
+    return 2* (1 - x**2)**(0.5);
+}

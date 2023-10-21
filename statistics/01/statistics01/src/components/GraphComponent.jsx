@@ -21,7 +21,7 @@ export default function GraphCopmonent({formula, func, a, b, m, k}){
     }, []);
 
     return (
-        <div style={{width: "50%"}}>
+        <div style={{width: "50%", margin: "auto"}}>
             <h3>{formula}</h3>
             <VictoryChart width={400} height={300}>
                 <VictoryScatter
